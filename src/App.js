@@ -1,25 +1,40 @@
-import logo from './logo.svg';
-import './App.css';
+import React, { useState } from 'react'
+import { AppContext } from './lib/contextLib'
+import { BrowserRouter } from 'react-router-dom'
+import { ThemeProvider } from '@mui/material'
+import { theme } from './styles'
+import DrawerNav from './components/DrawerNav/DrawerNav'
+
+import './app.css'
+
+const MyProvider = (props) => {
+  const [isAuthenticated, setIsAuthenticated] = useState(false)
+  const [userToken, setUserToken] = useState('')
+  const [currentUser, setCurrentUser] = useState([])
+
+  return (
+    <AppContext.Provider
+      value={{
+        loggedIn: [isAuthenticated, setIsAuthenticated],
+        token: [userToken, setUserToken],
+        user: [currentUser, setCurrentUser],
+      }}
+    >
+      {props.children}
+    </AppContext.Provider>
+  )
+}
 
 function App() {
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+    <MyProvider>
+      <BrowserRouter>
+        <ThemeProvider theme={theme}>
+          <DrawerNav />
+        </ThemeProvider>
+      </BrowserRouter>
+    </MyProvider>
+  )
 }
 
-export default App;
+export default App
