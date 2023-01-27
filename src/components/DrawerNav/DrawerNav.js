@@ -111,7 +111,6 @@ const DrawerNav = () => {
 
   const [currentUser, setCurrentUser] = user
   setCurrentUser(useCurrentUser(token[0]))
-  console.log(currentUser)
 
   if (!loggedIn[0]) {
     return <Login />

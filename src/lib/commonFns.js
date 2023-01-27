@@ -27,7 +27,7 @@ export function parseDays(value) {
   year = value >= 365 ? Math.floor(value / 365) : 0
   value = year ? value - year * 365 : value
 
-  months = value >= 30 ? Math.floor((value % 365) / 30) : 0
+  months = value >= 30 ? Math.floor((value % 365) / 30.5) : 0
   value = months ? value - months * 30 : value
 
   week = value >= 7 ? Math.floor((value % 365) / 7) : 0
