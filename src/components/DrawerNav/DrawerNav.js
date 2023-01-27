@@ -1,4 +1,4 @@
-import * as React from 'react'
+import React, { useEffect } from 'react'
 import { styled, useTheme } from '@mui/material/styles'
 import Box from '@mui/material/Box'
 import MuiDrawer from '@mui/material/Drawer'
@@ -19,7 +19,6 @@ import ListItemText from '@mui/material/ListItemText'
 import { NavItems } from './NavItems'
 import { Link } from 'react-router-dom'
 import Router from './Router'
-import { Navigate } from 'react-router'
 
 import { useAppContext } from '../../lib/contextLib'
 import Login from '../Login/Login'
@@ -93,9 +92,10 @@ const Drawer = styled(MuiDrawer, {
 }))
 
 const DrawerNav = () => {
+  const { loggedIn, token, user, pageTitle } = useAppContext()
   const theme = useTheme()
   const [open, setOpen] = React.useState(false)
-  const [pageTitle, setPageTitle] = React.useState('Dashboard')
+  const [title, setTitle] = pageTitle
 
   const handleDrawerOpen = () => {
     setOpen(true)
@@ -106,10 +106,9 @@ const DrawerNav = () => {
   }
 
   const handleDrawerItemClick = (title) => {
-    setPageTitle(title)
+    setTitle(title)
   }
 
-  const { loggedIn, token, user } = useAppContext()
   const [currentUser, setCurrentUser] = user
   setCurrentUser(useCurrentUser(token[0]))
   console.log(currentUser)
@@ -148,9 +147,9 @@ const DrawerNav = () => {
             </Typography>
             <IconButton onClick={handleDrawerClose}>
               {theme.direction === 'rtl' ? (
-                <ChevronRightIcon />
+                <ChevronRightIcon sx={{ color: 'white' }} />
               ) : (
-                <ChevronLeftIcon />
+                <ChevronLeftIcon sx={{ color: 'white' }} />
               )}
             </IconButton>
           </DrawerHeader>

@@ -11,6 +11,7 @@ const MyProvider = (props) => {
   const [isAuthenticated, setIsAuthenticated] = useState(false)
   const [userToken, setUserToken] = useState('')
   const [currentUser, setCurrentUser] = useState([])
+  const [pageTitle, setPageTitle] = useState('')
 
   return (
     <AppContext.Provider
@@ -18,6 +19,7 @@ const MyProvider = (props) => {
         loggedIn: [isAuthenticated, setIsAuthenticated],
         token: [userToken, setUserToken],
         user: [currentUser, setCurrentUser],
+        pageTitle: [pageTitle, setPageTitle],
       }}
     >
       {props.children}

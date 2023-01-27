@@ -25,10 +25,11 @@ export default function Login() {
   }
 
   //Context Variables
-  const { loggedIn, token, user } = useAppContext()
+  const { loggedIn, token, user, pageTitle } = useAppContext()
   const [loggedInState, setLoggedInState] = loggedIn
   const [tokenValue, setTokenValue] = token
   const [currentUser, setCurrentUser] = user
+  const [title, setTitle] = pageTitle
 
   const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')
@@ -62,6 +63,7 @@ export default function Login() {
             setOpen(true)
             setTokenValue(res.data.token)
             localStorage.setItem('emapptoken', res.data.token)
+            setTitle('Dashboard')
             setLoggedInState(true)
           }
         }

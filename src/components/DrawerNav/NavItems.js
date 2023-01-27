@@ -6,7 +6,7 @@ export const NavItems = [
   {
     title: 'Dashboard',
     icon: <DashboardOutlined style={{ color: 'white' }} />,
-    link: '/dashoard',
+    link: '/',
   },
   {
     title: 'Products',
