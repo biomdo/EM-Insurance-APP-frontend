@@ -4,9 +4,23 @@ import { DataGrid } from '@mui/x-data-grid'
 import Tooltip from '@mui/material/Tooltip'
 import Fab from '@mui/material/Fab'
 import AddIcon from '@mui/icons-material/Add'
+import Slide from '@mui/material/Slide'
 
 import { axios } from '../../axios'
 import { parseDays } from '../../lib/commonFns'
+import Snackbar from '@mui/material/Snackbar'
+import MuiAlert from '@mui/material/Alert'
+import Dialog from '@mui/material/Dialog'
+import DialogActions from '@mui/material/DialogActions'
+import DialogContent from '@mui/material/DialogContent'
+import DialogContentText from '@mui/material/DialogContentText'
+import DialogTitle from '@mui/material/DialogTitle'
+import EditTwoToneIcon from '@mui/icons-material/EditTwoTone'
+import IconButton from '@mui/material/IconButton'
+import DeleteIcon from '@mui/icons-material/Delete'
+import Button from '@mui/material/Button'
+
+import { useNavigate } from 'react-router-dom'
 
 const columns = [
   //   { field: 'id', headerName: 'ID', width: 90 },
@@ -55,7 +69,25 @@ const columns = [
   //   },
 ]
 
+const Transition = React.forwardRef(function Transition(props, ref) {
+  return <Slide direction='up' ref={ref} {...props} />
+})
+
+const Alert = (props) => {
+  return <MuiAlert elevation={6} variant='filled' {...props} />
+}
+
 function Product() {
+  const [open, setOpen] = useState(false)
+  const [isError, setIsError] = useState(false)
+  const [alertMsg, setAlertMsg] = useState('')
+  const handleClose = (event, reason) => {
+    if (reason === 'clickaway') {
+      return
+    }
+    setOpen(false)
+  }
+
   const [products, setProducts] = useState([])
   const [rows, setRows] = useState([])
   const fetchProducts = async () => {
@@ -86,11 +118,74 @@ function Product() {
   const formatter = new Intl.NumberFormat('en-US', {
     style: 'currency',
     currency: 'KES',
-
     // Options are needed to round to whole numbers
     //minimumFractionDigits: 0, // (this suffices for whole numbers, but will print 2500.10 as $2,500.1)
     //maximumFractionDigits: 0, // (causes 2500.99 to be printed as $2,501)
   })
+
+  const [viewEdit, setViewEdit] = useState(false)
+  const [viewDelete, setViewDelete] = useState(false)
+  const [selectedProducts, setSelectedProducts] = useState([])
+  const [selectedProduct, setSelectedProduct] = useState([])
+
+  const [openDeleteDialog, setOpenDeleteDialog] = useState(false)
+  const handleClickCloseDeleteDialog = () => {
+    setOpenDeleteDialog(false)
+  }
+  const handleClickOpenDeleteDialog = () => {
+    setOpenDeleteDialog(true)
+  }
+
+  const navigate = useNavigate()
+  const deleteProducts = () => {
+    selectedProducts.map((product) => {
+      axios.put(`/product/delete/${product}`)
+    })
+
+    setAlertMsg(
+      selectedProducts.length > 1
+        ? `Products succesfully deleted`
+        : `Product successfuly deleted`
+    )
+    fetchProduct()
+    setSelectedProduct([])
+    setSelectedProducts([])
+    setRows([])
+    setOpen(true)
+    setOpenDeleteDialog(false)
+    setProductRows()
+  }
+
+  const fetchProduct = async (id) => {
+    axios
+      .get(`/product/${id}`)
+      .then((res) => {
+        setSelectedProduct(res.data)
+      })
+      .catch((error) => {
+        // console.log(error)
+      })
+  }
+
+  const [openAddEditDialog, setOpenAddEditDialog] = useState(false)
+  const handleClickCloseAddEditDialog = () => {
+    setOpenAddEditDialog(false)
+  }
+  const handleClickFab = () => {
+    setSelectedProduct([])
+    setOpenAddEditDialog(true)
+  }
+
+  useEffect(() => {
+    if (selectedProducts.length === 1) {
+      setViewEdit(true)
+      fetchProduct(selectedProducts[0])
+    } else {
+      setViewEdit(false)
+      setSelectedProduct([])
+    }
+    selectedProducts.length > 0 ? setViewDelete(true) : setViewDelete(false)
+  }, [selectedProducts])
 
   useEffect(() => {
     fetchProducts()
@@ -99,6 +194,24 @@ function Product() {
 
   return (
     <Box sx={{ height: '580px', width: '100%' }}>
+      <Snackbar
+        anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
+        open={open}
+        autoHideDuration={4000}
+        onClose={handleClose}
+      >
+        <div>
+          {!isError ? (
+            <Alert onClose={handleClose} severity='success'>
+              {alertMsg}
+            </Alert>
+          ) : (
+            <Alert onClose={handleClose} severity='error'>
+              {alertMsg}
+            </Alert>
+          )}
+        </div>
+      </Snackbar>
       <Tooltip title='Add New Product'>
         <Fab
           color='primary'
@@ -110,7 +223,9 @@ function Product() {
             left: 'auto',
             position: 'fixed',
           }}
-          onClick={() => {}}
+          onClick={() => {
+            handleClickFab()
+          }}
         >
           <AddIcon />
         </Fab>
@@ -118,12 +233,81 @@ function Product() {
       <DataGrid
         rows={rows}
         columns={columns}
-        pageSize={8}
-        rowsPerPageOptions={[8]}
+        pageSize={9}
+        rowsPerPageOptions={[9]}
         checkboxSelection
         disableSelectionOnClick
         experimentalFeatures={{ newEditingApi: true }}
+        onSelectionModelChange={(newSelection) => {
+          setSelectedProducts(newSelection)
+        }}
+        selectionModel={selectedProducts}
       />
+      {viewEdit ? (
+        <Tooltip title='Edit Product'>
+          <IconButton
+            aria-label='edit'
+            style={{ float: 'left' }}
+            // onClick={() => handleClickOpenAddEditDialog(property)}
+          >
+            <EditTwoToneIcon sx={{ fontSize: '30px' }} />
+          </IconButton>
+        </Tooltip>
+      ) : (
+        <></>
+      )}
+      {viewDelete ? (
+        <Tooltip title='Delete Product(s)'>
+          <IconButton
+            aria-label='edit'
+            color='error'
+            style={{ float: 'left', marginLeft: '10px' }}
+            onClick={() => handleClickOpenDeleteDialog()}
+          >
+            <DeleteIcon sx={{ fontSize: '30px' }} />
+          </IconButton>
+        </Tooltip>
+      ) : (
+        <></>
+      )}
+      <Dialog
+        open={openAddEditDialog}
+        onClose={handleClickCloseAddEditDialog}
+        TransitionComponent={Transition}
+        fullWidth
+      >
+        <DialogTitle>
+          {selectedProducts.length === 1 ? 'Edit Product' : 'Add New Product'}
+        </DialogTitle>
+        <DialogContent>
+          <DialogContentText style={{ margin: 5 }}></DialogContentText>
+        </DialogContent>
+      </Dialog>
+      <Dialog
+        open={openDeleteDialog}
+        onClose={handleClickCloseDeleteDialog}
+        TransitionComponent={Transition}
+        fullWidth
+      >
+        <DialogTitle>Delete Product</DialogTitle>
+        <DialogContent>
+          <DialogContentText style={{ margin: 5 }}>
+            Are you sure your want to delete
+            {selectedProducts.length === 1
+              ? ` ${selectedProduct.name}`
+              : ` all the ${selectedProducts.length} selected products`}
+            ?
+          </DialogContentText>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={deleteProducts} variant='contained' color='error'>
+            Yes, Delete
+          </Button>
+          <Button onClick={handleClickCloseDeleteDialog} variant='contained'>
+            No, Cancel
+          </Button>
+        </DialogActions>
+      </Dialog>
     </Box>
   )
 }
