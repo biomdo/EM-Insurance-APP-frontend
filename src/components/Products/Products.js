@@ -1,6 +1,9 @@
 import React, { useEffect, useState } from 'react'
 import Box from '@mui/material/Box'
 import { DataGrid } from '@mui/x-data-grid'
+import Tooltip from '@mui/material/Tooltip'
+import Fab from '@mui/material/Fab'
+import AddIcon from '@mui/icons-material/Add'
 
 import { axios } from '../../axios'
 import { parseDays } from '../../lib/commonFns'
@@ -95,12 +98,28 @@ function Product() {
   }, [products.length])
 
   return (
-    <Box sx={{ height: '650px', width: '100%' }}>
+    <Box sx={{ height: '580px', width: '100%' }}>
+      <Tooltip title='Add New Product'>
+        <Fab
+          color='primary'
+          style={{
+            margin: 0,
+            top: 'auto',
+            right: 20,
+            bottom: 20,
+            left: 'auto',
+            position: 'fixed',
+          }}
+          onClick={() => {}}
+        >
+          <AddIcon />
+        </Fab>
+      </Tooltip>
       <DataGrid
         rows={rows}
         columns={columns}
-        pageSize={10}
-        rowsPerPageOptions={[10]}
+        pageSize={8}
+        rowsPerPageOptions={[8]}
         checkboxSelection
         disableSelectionOnClick
         experimentalFeatures={{ newEditingApi: true }}
