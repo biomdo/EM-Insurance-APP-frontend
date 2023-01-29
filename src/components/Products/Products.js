@@ -19,6 +19,8 @@ import EditTwoToneIcon from '@mui/icons-material/EditTwoTone'
 import IconButton from '@mui/material/IconButton'
 import DeleteIcon from '@mui/icons-material/Delete'
 import Button from '@mui/material/Button'
+import TextField from '@mui/material/TextField'
+import InputLabel from '@mui/material/InputLabel'
 
 import { useNavigate } from 'react-router-dom'
 
@@ -130,13 +132,15 @@ function Product() {
 
   const [openDeleteDialog, setOpenDeleteDialog] = useState(false)
   const handleClickCloseDeleteDialog = () => {
+    setSelectedProduct([])
+    setSelectedProducts([])
+    setProducts([])
     setOpenDeleteDialog(false)
   }
   const handleClickOpenDeleteDialog = () => {
     setOpenDeleteDialog(true)
   }
 
-  const navigate = useNavigate()
   const deleteProducts = () => {
     selectedProducts.map((product) => {
       axios.put(`/product/delete/${product}`)
@@ -150,10 +154,8 @@ function Product() {
     fetchProduct()
     setSelectedProduct([])
     setSelectedProducts([])
-    setRows([])
     setOpen(true)
-    setOpenDeleteDialog(false)
-    setProductRows()
+    handleClickCloseDeleteDialog()
   }
 
   const fetchProduct = async (id) => {
@@ -169,11 +171,116 @@ function Product() {
 
   const [openAddEditDialog, setOpenAddEditDialog] = useState(false)
   const handleClickCloseAddEditDialog = () => {
+    setSelectedProduct([])
+    setSelectedProducts([])
+    setProducts([])
+    setProductName('')
+    setYears(0)
+    setMonths(0)
+    setDays(0)
+    setAmount(0)
     setOpenAddEditDialog(false)
   }
   const handleClickFab = () => {
     setSelectedProduct([])
     setOpenAddEditDialog(true)
+  }
+
+  const calYears = (value) => {
+    let yrs = value >= 365 ? Math.floor(value / 365) : 0
+    value = yrs > 0 ? value - yrs * 365 : value
+    setYears(yrs)
+    return value
+  }
+  const calMonths = (value) => {
+    let mnths = value >= 30 ? Math.floor((value % 365) / 30) : 0
+    value = mnths > 0 ? value - mnths * 30 : value
+    setMonths(mnths)
+    return value
+  }
+  const calDays = (value) => {
+    setDays(value)
+    return value
+  }
+
+  const handleEditBtn = () => {
+    setProductName(selectedProduct.name)
+    let value = calYears(selectedProduct.period)
+    value = calMonths(value)
+    value = calDays(value)
+    setAmount(selectedProduct.amount)
+    setOpenAddEditDialog(true)
+  }
+
+  const [productName, setProductName] = useState('')
+  const [years, setYears] = useState(0)
+  const [months, setMonths] = useState(0)
+  const [days, setDays] = useState(0)
+  const [amount, setAmount] = useState(0)
+
+  const checkIfNumber = (e) => {
+    const numRegexp = /^[0-9.\b]+$/
+    if (numRegexp.test(e.target.value)) {
+      return true
+    } else {
+      return false
+    }
+  }
+
+  const calcDays = (num, type) => {
+    if (type === 'years') {
+      return num * 365
+    } else {
+      return num * 30
+    }
+  }
+
+  const addProduct = () => {
+    let period = calcDays(years, 'years') + calcDays(months, 'months') + days
+    const newProduct = {
+      name: productName,
+      period: period,
+      amount: amount,
+    }
+    if (selectedProduct.id) {
+      axios
+        .put(`/product/${selectedProduct.id}`, { ...newProduct })
+        .then((res) => {
+          if (res && res.data) {
+            if (!res.data.isError) {
+              setAlertMsg('Product update successful')
+              setIsError(false)
+              handleClickCloseAddEditDialog()
+            } else {
+              setAlertMsg(res.data.message)
+              setIsError(true)
+            }
+            setOpen(true)
+          }
+        })
+        .catch((error) => {
+          console.log(error)
+        })
+    } else {
+      axios
+        .post(`/product`, { ...newProduct })
+        .then((res) => {
+          if (res && res.data) {
+            if (!res.data.isError) {
+              setAlertMsg('Product added successfully')
+              setIsError(false)
+              handleClickCloseAddEditDialog()
+            } else {
+              setAlertMsg(res.data.message)
+              setIsError(true)
+            }
+            setOpen(true)
+          }
+        })
+        .catch((error) => {
+          console.log(error)
+        })
+    }
   }
 
   useEffect(() => {
@@ -248,7 +355,7 @@ function Product() {
           <IconButton
             aria-label='edit'
             style={{ float: 'left' }}
-            // onClick={() => handleClickOpenAddEditDialog(property)}
+            onClick={() => handleEditBtn()}
           >
             <EditTwoToneIcon sx={{ fontSize: '30px' }} />
           </IconButton>
@@ -281,7 +388,111 @@ function Product() {
         </DialogTitle>
         <DialogContent>
           <DialogContentText style={{ margin: 5 }}></DialogContentText>
+          <TextField
+            id='product-name'
+            label='Product Name'
+            variant='outlined'
+            required
+            fullWidth
+            value={productName || ''}
+            onChange={(e) => {
+              setProductName(e.target.value)
+            }}
+            sx={{ marginBottom: 2 }}
+          />
+          <div
+            style={{
+              display: 'flex',
+              alignItems: 'flex-start',
+              flexFlow: 'row wrap',
+              gap: '10px 10px',
+            }}
+          >
+            <InputLabel sx={{ margin: 2 }} id='product-duration-label'>
+              Duration:
+            </InputLabel>
+
+            <TextField
+              id='product-year'
+              type='number'
+              label='Years'
+              variant='outlined'
+              fullWidth
+              value={years || 0}
+              onChange={(e) => {
+                setYears(e.target.value)
+              }}
+              sx={{
+                minWidth: 141,
+                maxWidth: 141,
+                flexGrow: 1,
+                marginBottom: 2,
+              }}
+            />
+            <TextField
+              id='product-months'
+              label='Months'
+              type='number'
+              variant='outlined'
+              fullWidth
+              inputProps={{ min: 0, max: 12 }}
+              value={months || 0}
+              onChange={(e) => {
+                setMonths(e.target.value)
+              }}
+              sx={{
+                minWidth: 141,
+                maxWidth: 141,
+                flexGrow: 1,
+                marginBottom: 2,
+              }}
+            />
+            <TextField
+              id='product-days'
+              label='Days'
+              variant='outlined'
+              fullWidth
+              type='number'
+              inputProps={{ min: 0, max: 30 }}
+              value={days || 0}
+              onChange={(e) => {
+                setDays(e.target.value)
+              }}
+              sx={{
+                minWidth: 141,
+                maxWidth: 141,
+                flexGrow: 1,
+                marginBottom: 2,
+              }}
+            />
+          </div>
+          <TextField
+            id='product-amount'
+            label='Amount'
+            variant='outlined'
+            required='true'
+            fullWidth
+            value={amount || ''}
+            onChange={(e) => {
+              if (checkIfNumber(e)) {
+                setAmount(e.target.value)
+              }
+            }}
+            sx={{ marginBottom: 2 }}
+          />
         </DialogContent>
+        <DialogActions>
+          <Button onClick={addProduct} variant='contained' color='primary'>
+            {selectedProduct.id ? 'Update' : 'Add Product'}
+          </Button>
+          <Button
+            onClick={handleClickCloseAddEditDialog}
+            variant='contained'
+            color='error'
+          >
+            Cancel
+          </Button>
+        </DialogActions>
       </Dialog>
       <Dialog
         open={openDeleteDialog}

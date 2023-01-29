@@ -22,18 +22,15 @@ export const useCurrentUser = (token) => {
 }
 
 export function parseDays(value) {
-  var year, months, week, days
+  var year, months, days
 
   year = value >= 365 ? Math.floor(value / 365) : 0
   value = year ? value - year * 365 : value
 
-  months = value >= 30 ? Math.floor((value % 365) / 30.5) : 0
+  months = value >= 30 ? Math.floor((value % 365) / 30) : 0
   value = months ? value - months * 30 : value
 
-  week = value >= 7 ? Math.floor((value % 365) / 7) : 0
-  value = week ? value - week * 7 : value
-
-  days = value < 7 ? Math.floor((value % 365) % 7) : 0
+  days = value
 
   let periodString = ''
   if (year > 1) {
@@ -49,7 +46,7 @@ export function parseDays(value) {
     periodString += months + ' month '
   }
   if (days > 1) {
-    periodString += months + ' days'
+    periodString += days + ' days'
   }
   if (days === 1) {
     periodString += days + ' day'
