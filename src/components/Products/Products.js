@@ -22,8 +22,6 @@ import Button from '@mui/material/Button'
 import TextField from '@mui/material/TextField'
 import InputLabel from '@mui/material/InputLabel'
 
-import { useNavigate } from 'react-router-dom'
-
 const columns = [
   //   { field: 'id', headerName: 'ID', width: 90 },
   //   {
@@ -143,6 +141,7 @@ function Product() {
 
   const deleteProducts = () => {
     selectedProducts.map((product) => {
+      axios.put(`/clientproduct/delete/product/${product.id}`)
       axios.put(`/product/delete/${product}`)
     })
 
