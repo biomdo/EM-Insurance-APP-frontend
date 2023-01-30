@@ -7,9 +7,9 @@ import AddIcon from '@mui/icons-material/Add'
 import Slide from '@mui/material/Slide'
 
 import { axios } from '../../axios'
-import { parseDays } from '../../lib/commonFns'
 import Snackbar from '@mui/material/Snackbar'
 import MuiAlert from '@mui/material/Alert'
+import { parseDays } from '../../lib/commonFns'
 import Dialog from '@mui/material/Dialog'
 import DialogActions from '@mui/material/DialogActions'
 import DialogContent from '@mui/material/DialogContent'
@@ -22,16 +22,18 @@ import Button from '@mui/material/Button'
 import TextField from '@mui/material/TextField'
 import InputLabel from '@mui/material/InputLabel'
 
+import AddClientForm from './Client/AddClientForm'
+
 const columns = [
   {
     field: 'first_name',
     headerName: 'First name',
-    width: 180,
+    width: 150,
   },
   {
     field: 'last_name',
     headerName: 'Last name',
-    width: 180,
+    width: 150,
   },
   {
     field: 'id_number',
@@ -54,10 +56,22 @@ const columns = [
     width: 150,
   },
   {
-    field: 'products',
-    headerName: 'Products',
+    field: 'benefitiaries',
+    headerName: 'Benefitiaries',
     // type: 'number',
     width: 100,
+  },
+  {
+    field: 'product',
+    headerName: 'Product',
+    // type: 'number',
+    width: 200,
+  },
+  {
+    field: 'days',
+    headerName: 'Days Left',
+    // type: 'number',
+    width: 200,
   },
 ]
 
@@ -91,20 +105,56 @@ function Clients() {
     }
   }
 
+  const fetClientProduct = async (id) => {}
+
   const setClientRows = () => {
+    let days = 0
+    let cDay = new Date()
     clients.map((client) => {
+      axios
+        .get(`/benefitiary/client/${client.id}`)
+        .then((res) => {
+          client.benefitiaries = res.data.length
+        })
+        .catch((error) => {
+          console.log(error)
+        })
+
       axios
         .get(`/client/products/${client.id}`)
         .then((res) => {
-          client.products = res.data.length
+          let eDay = new Date(res.data[0].end_date)
+          days = eDay.getTime() - cDay.getTime()
+          client.days = parseDays(Math.floor(days / (1000 * 3600 * 24)))
+          axios.get(`/product/${res.data[0].product_id}`).then((res1) => {
+            console.log(res1.data.name)
+            if (res1.data.name) client.product = res1.data.name
+          })
         })
         .catch((error) => {
           console.log(error)
         })
     })
-    console.log(clients)
+
     setRows(clients)
   }
+
+  const [openAddEditDialog, setOpenAddEditDialog] = useState(false)
+  const handleClickCloseAddEditDialog = () => {
+    setSelectedClient([])
+    setSelectedClients([])
+    setClients([])
+    setOpenAddEditDialog(false)
+  }
+
+  const [selectedClients, setSelectedClients] = useState([])
+  const [selectedClient, setSelectedClient] = useState([])
+  const handleClickFab = () => {
+    setSelectedClient([])
+    setOpenAddEditDialog(true)
+  }
+
+  useEffect(() => {}, [rows])
 
   useEffect(() => {
     fetchClients()
@@ -131,8 +181,9 @@ function Clients() {
           )}
         </div>
       </Snackbar>
-      <Tooltip title='Add New Product'>
+      <Tooltip title='Onboard Cient'>
         <Fab
+          text='dsadsa'
           color='primary'
           style={{
             margin: 0,
@@ -143,7 +194,7 @@ function Clients() {
             position: 'fixed',
           }}
           onClick={() => {
-            // handleClickFab()
+            handleClickFab()
           }}
         >
           <AddIcon />
@@ -157,11 +208,30 @@ function Clients() {
         checkboxSelection
         disableSelectionOnClick
         experimentalFeatures={{ newEditingApi: true }}
-        // onSelectionModelChange={(newSelection) => {
-        //   setSelectedProducts(newSelection)
-        // }}
-        // selectionModel={selectedProducts}
+        onSelectionModelChange={(newSelection) => {
+          setSelectedClients(newSelection)
+        }}
+        selectionModel={selectedClients}
       />
+      <Dialog
+        open={openAddEditDialog}
+        onClose={handleClickCloseAddEditDialog}
+        TransitionComponent={Transition}
+        fullWidth
+        // sx={{
+        //   maxWidth: '800px',
+        //   padding: 2,
+        // }}
+      >
+        <DialogTitle>
+          {/* {selectedClients.length === 1 ? 'Edit Product' : 'Add New Product'} */}
+          Add Client
+        </DialogTitle>
+        <DialogContent>
+          <DialogContentText style={{ margin: 5 }}></DialogContentText>
+          <AddClientForm />
+        </DialogContent>
+      </Dialog>
     </Box>
   )
 }
