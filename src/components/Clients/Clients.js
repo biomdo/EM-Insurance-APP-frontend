@@ -50,7 +50,7 @@ const columns = [
   },
   {
     field: 'benefitiaries',
-    headerName: 'Benefitiaries',
+    headerName: 'Beneficiaries',
     // type: 'number',
     width: 100,
   },
@@ -105,7 +105,7 @@ function Clients() {
     let cDay = new Date()
     clients.map((client) => {
       axios
-        .get(`/benefitiary/client/${client.id}`)
+        .get(`/beneficiary/client/${client.id}`)
         .then((res) => {
           client.benefitiaries = res.data.length
         })

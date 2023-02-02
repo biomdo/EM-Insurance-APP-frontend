@@ -13,7 +13,7 @@ import {
 import PersonalInfo from './PersonalInfo'
 import AccountDetails from './AccountDetails'
 import ReviewInfo from './ReviewInfo'
-import Benefitiaries from './Benefitiaries'
+import Beneficiaries from './Beneficiaries'
 import Prod from './Prod'
 
 import { axios } from '../../../axios'
@@ -24,7 +24,7 @@ import Snackbar from '@mui/material/Snackbar'
 
 const steps = [
   'Personal Info',
-  'Benefitiaries',
+  'Beneficiaries',
   'Account Details',
   'Products',
   'Review and Submit',
@@ -50,7 +50,7 @@ function AddClientForm() {
   }
 
   const addClient = async () => {
-    addBenefitiaries(10)
+    addBeneficiaries(10)
     let newClient = {
       first_name: formik.values.first_name,
       last_name: formik.values.last_name,
@@ -61,7 +61,7 @@ function AddClientForm() {
     }
     await axios.post(`/client`, { ...newClient }).then((res) => {
       if (res && !res.data.isError) {
-        addBenefitiaries(res.data.id)
+        addBeneficiaries(res.data.id)
         addBankDetails(res.data.id)
         addClientProduct(res.data.id)
         setAlertMsg('Client added successfully')
@@ -75,23 +75,23 @@ function AddClientForm() {
     })
   }
 
-  const addBenefitiaries = (clientId) => {
+  const addBeneficiaries = (clientId) => {
     let benefitiaries = [
       {
-        first_name: formik.values.benefitiary_first_name1,
-        last_name: formik.values.benefitiary_last_name1,
+        first_name: formik.values.beneficiary_first_name1,
+        last_name: formik.values.beneficiary_last_name1,
         relation: formik.values.relation1,
         client_id: clientId,
       },
       {
-        first_name: formik.values.benefitiary_first_name2,
-        last_name: formik.values.benefitiary_last_name2,
+        first_name: formik.values.beneficiary_first_name2,
+        last_name: formik.values.beneficiary_last_name2,
         relation: formik.values.relation2,
         client_id: clientId,
       },
       {
-        first_name: formik.values.benefitiary_first_name3,
-        last_name: formik.values.benefitiary_last_name3,
+        first_name: formik.values.beneficiary_first_name3,
+        last_name: formik.values.beneficiary_last_name3,
         relation: formik.values.relation3,
         client_id: clientId,
       },
@@ -99,7 +99,7 @@ function AddClientForm() {
 
     benefitiaries.map((ben) => {
       axios
-        .post(`/benefitiary`, { ...ben })
+        .post(`/beneficiary`, { ...ben })
         .then((res) => {
           //   console.log(res.data)
         })
@@ -156,17 +156,17 @@ function AddClientForm() {
       email: '',
       phone_number: '',
       occupation: '',
-      benefitiary_first_name1: '',
-      benefitiary_last_name1: '',
+      beneficiary_first_name1: '',
+      beneficiary_last_name1: '',
       relation1: '',
-      benefitiary_first_name2: '',
-      benefitiary_last_name2: '',
+      beneficiary_first_name2: '',
+      beneficiary_last_name2: '',
       relation2: '',
-      benefitiary_first_name3: '',
-      benefitiary_last_name3: '',
+      beneficiary_first_name3: '',
+      beneficiary_last_name3: '',
       relation3: '',
-      benefitiary_first_name4: '',
-      benefitiary_last_name4: '',
+      beneficiary_first_name4: '',
+      beneficiary_last_name4: '',
       relation4: '',
       bank_name: '',
       branch: '',
@@ -193,17 +193,17 @@ function AddClientForm() {
       //   phone_number: Yup.string().required('Phone Number is required'),
       //   email: Yup.string().email('Invalid email'),
       //   occupation: Yup.string(),
-      //   benefitiary_first_name1: Yup.string().required('First Name is required'),
-      //   benefitiary_last_name1: Yup.string().required('Last Name is required'),
+      //   beneficiary_first_name1: Yup.string().required('First Name is required'),
+      //   beneficiary_last_name1: Yup.string().required('Last Name is required'),
       //   relation1: Yup.string().required('Relation is required'),
-      //   benefitiary_first_name2: Yup.string(),
-      //   benefitiary_last_name2: Yup.string(),
+      //   beneficiary_first_name2: Yup.string(),
+      //   beneficiary_last_name2: Yup.string(),
       //   relation2: Yup.string(),
-      //   benefitiary_first_name3: Yup.string(),
-      //   benefitiary_last_name3: Yup.string(),
+      //   beneficiary_first_name3: Yup.string(),
+      //   beneficiary_last_name3: Yup.string(),
       //   relation3: Yup.string(),
-      //   benefitiary_first_name4: Yup.string(),
-      //   benefitiary_last_name4: Yup.string(),
+      //   beneficiary_first_name4: Yup.string(),
+      //   beneficiary_last_name4: Yup.string(),
       //   relation4: Yup.string(),
       //   bank_name: Yup.string().required('Bank Name is required'),
       //   branch: Yup.string().required('Branch is required'),
@@ -224,7 +224,7 @@ function AddClientForm() {
       case 0:
         return <PersonalInfo formik={formik} />
       case 1:
-        return <Benefitiaries formik={formik} />
+        return <Beneficiaries formik={formik} />
       case 2:
         return <AccountDetails formik={formik} />
       case 3:

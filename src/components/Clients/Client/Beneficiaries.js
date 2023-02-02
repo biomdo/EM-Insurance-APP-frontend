@@ -5,10 +5,10 @@ import IconButton from '@mui/material/IconButton'
 import RemoveIcon from '@mui/icons-material/Remove'
 import Divider from '@mui/material/Divider'
 
-const Benefitiaries = (props) => {
+const Beneficiaries = (props) => {
   const { formik } = props
-  const [numberOfBenefitiaries, setNumberOfBenefitiaries] = useState([2])
-  useEffect(() => {}, [numberOfBenefitiaries])
+  const [numberOfBeneficiaries, setNumberOfBeneficiaries] = useState([2])
+  useEffect(() => {}, [numberOfBeneficiaries])
   return (
     <Grid container spacing={2}>
       <Grid item xs={12}>
@@ -16,39 +16,39 @@ const Benefitiaries = (props) => {
       </Grid>
       <Grid item xs={6}>
         <TextField
-          name='benefitiary_first_name1'
+          name='beneficiary_first_name1'
           label='First Name'
           variant='outlined'
           size='small'
           fullWidth
-          value={formik.values.benefitiary_first_name1}
+          value={formik.values.beneficiary_first_name1}
           onChange={formik.handleChange}
           error={
-            formik.touched.benefitiary_first_name1 &&
-            Boolean(formik.errors.benefitiary_first_name1)
+            formik.touched.beneficiary_first_name1 &&
+            Boolean(formik.errors.beneficiary_first_name1)
           }
           helperText={
-            formik.touched.benefitiary_first_name1 &&
-            formik.errors.benefitiary_first_name1
+            formik.touched.beneficiary_first_name1 &&
+            formik.errors.beneficiary_first_name1
           }
         />
       </Grid>
       <Grid item xs={6}>
         <TextField
-          name='benefitiary_last_name1'
+          name='beneficiary_last_name1'
           label='Last Name'
           variant='outlined'
           size='small'
           fullWidth
-          value={formik.values.benefitiary_last_name1}
+          value={formik.values.beneficiary_last_name1}
           onChange={formik.handleChange}
           error={
-            formik.touched.benefitiary_last_name1 &&
-            Boolean(formik.errors.benefitiary_last_name1)
+            formik.touched.beneficiary_last_name1 &&
+            Boolean(formik.errors.beneficiary_last_name1)
           }
           helperText={
-            formik.touched.benefitiary_last_name1 &&
-            formik.errors.benefitiary_last_name1
+            formik.touched.beneficiary_last_name1 &&
+            formik.errors.beneficiary_last_name1
           }
         />
       </Grid>
@@ -69,9 +69,9 @@ const Benefitiaries = (props) => {
         Other Benenfitiaries
       </Grid>
 
-      {numberOfBenefitiaries.map((i) => {
-        let first_name_identifier = `benefitiary_first_name${i}`
-        let last_name_identifier = `benefitiary_last_name${i}`
+      {numberOfBeneficiaries.map((i) => {
+        let first_name_identifier = `beneficiary_first_name${i}`
+        let last_name_identifier = `beneficiary_last_name${i}`
         let relation_identifier = `relatiion${i}`
         return (
           <>
@@ -144,8 +144,8 @@ const Benefitiaries = (props) => {
           key='Add'
           color='primary'
           onClick={() => {
-            let number = numberOfBenefitiaries.length + 1
-            setNumberOfBenefitiaries([...numberOfBenefitiaries, number + 1])
+            let number = numberOfBeneficiaries.length + 1
+            setNumberOfBeneficiaries([...numberOfBeneficiaries, number + 1])
           }}
         >
           <AddIcon />
@@ -156,10 +156,10 @@ const Benefitiaries = (props) => {
           key='Remove'
           color='error'
           onClick={() => {
-            let number = numberOfBenefitiaries.length + 1
+            let number = numberOfBeneficiaries.length + 1
             if (number > 2) {
-              setNumberOfBenefitiaries(
-                numberOfBenefitiaries.splice(0, number - 2)
+              setNumberOfBeneficiaries(
+                numberOfBeneficiaries.splice(0, number - 2)
               )
             }
           }}
@@ -171,4 +171,4 @@ const Benefitiaries = (props) => {
   )
 }
 
-export default Benefitiaries
+export default Beneficiaries
