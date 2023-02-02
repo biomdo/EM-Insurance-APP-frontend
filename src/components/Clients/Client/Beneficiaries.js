@@ -72,7 +72,7 @@ const Beneficiaries = (props) => {
       {numberOfBeneficiaries.map((i) => {
         let first_name_identifier = `beneficiary_first_name${i}`
         let last_name_identifier = `beneficiary_last_name${i}`
-        let relation_identifier = `relatiion${i}`
+        let relation_identifier = `relation${i}`
         return (
           <>
             <Grid item xs={6} key={`${i}`}>
