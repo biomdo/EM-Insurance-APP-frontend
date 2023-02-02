@@ -18,9 +18,4 @@ export const NavItems = [
     icon: <PeopleOutlinedIcon style={{ color: 'white' }} />,
     link: '/clients',
   },
-  {
-    title: 'Form',
-    icon: <PeopleOutlinedIcon style={{ color: 'white' }} />,
-    link: '/form',
-  },
 ]

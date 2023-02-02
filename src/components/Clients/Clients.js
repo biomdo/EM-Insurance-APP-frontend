@@ -11,16 +11,9 @@ import Snackbar from '@mui/material/Snackbar'
 import MuiAlert from '@mui/material/Alert'
 import { parseDays } from '../../lib/commonFns'
 import Dialog from '@mui/material/Dialog'
-import DialogActions from '@mui/material/DialogActions'
 import DialogContent from '@mui/material/DialogContent'
 import DialogContentText from '@mui/material/DialogContentText'
 import DialogTitle from '@mui/material/DialogTitle'
-import EditTwoToneIcon from '@mui/icons-material/EditTwoTone'
-import IconButton from '@mui/material/IconButton'
-import DeleteIcon from '@mui/icons-material/Delete'
-import Button from '@mui/material/Button'
-import TextField from '@mui/material/TextField'
-import InputLabel from '@mui/material/InputLabel'
 
 import AddClientForm from './Client/AddClientForm'
 
@@ -127,7 +120,6 @@ function Clients() {
           days = eDay.getTime() - cDay.getTime()
           client.days = parseDays(Math.floor(days / (1000 * 3600 * 24)))
           axios.get(`/product/${res.data[0].product_id}`).then((res1) => {
-            console.log(res1.data.name)
             if (res1.data.name) client.product = res1.data.name
           })
         })

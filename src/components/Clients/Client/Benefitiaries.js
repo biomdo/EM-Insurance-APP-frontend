@@ -1,8 +1,14 @@
-import React from 'react'
+import React, { useState, useEffect } from 'react'
 import { TextField, Grid } from '@mui/material'
+import AddIcon from '@mui/icons-material/Add'
+import IconButton from '@mui/material/IconButton'
+import RemoveIcon from '@mui/icons-material/Remove'
+import Divider from '@mui/material/Divider'
 
 const Benefitiaries = (props) => {
   const { formik } = props
+  const [numberOfBenefitiaries, setNumberOfBenefitiaries] = useState([2])
+  useEffect(() => {}, [numberOfBenefitiaries])
   return (
     <Grid container spacing={2}>
       <Grid item xs={12}>
@@ -62,157 +68,105 @@ const Benefitiaries = (props) => {
       <Grid item xs={12}>
         Other Benenfitiaries
       </Grid>
-      <Grid item xs={6}>
-        <TextField
-          name='benefitiary_first_name2'
-          label='First Name'
-          variant='outlined'
-          size='small'
-          fullWidth
-          value={formik.values.benefitiary_first_name2}
-          onChange={formik.handleChange}
-          error={
-            formik.touched.benefitiary_first_name2 &&
-            Boolean(formik.errors.benefitiary_first_name2)
-          }
-          helperText={
-            formik.touched.benefitiary_first_name2 &&
-            formik.errors.benefitiary_first_name2
-          }
-        />
-      </Grid>
 
-      <Grid item xs={6}>
-        <TextField
-          name='benefitiary_last_name2'
-          label='Last Name'
-          variant='outlined'
-          size='small'
-          fullWidth
-          value={formik.values.benefitiary_last_name2}
-          onChange={formik.handleChange}
-          error={
-            formik.touched.benefitiary_last_name2 &&
-            Boolean(formik.errors.benefitiary_last_name2)
-          }
-          helperText={
-            formik.touched.benefitiary_last_name2 &&
-            formik.errors.benefitiary_last_name2
-          }
-        />
+      {numberOfBenefitiaries.map((i) => {
+        let first_name_identifier = `benefitiary_first_name${i}`
+        let last_name_identifier = `benefitiary_last_name${i}`
+        let relation_identifier = `relatiion${i}`
+        return (
+          <>
+            <Grid item xs={6} key={`${i}`}>
+              <TextField
+                name={first_name_identifier}
+                label='First Name'
+                variant='outlined'
+                size='small'
+                fullWidth
+                value={formik.values.first_name_identifier}
+                onChange={formik.handleChange}
+                error={
+                  formik.touched.first_name_identifier &&
+                  Boolean(formik.errors.first_name_identifier)
+                }
+                helperText={
+                  formik.touched.first_name_identifier &&
+                  formik.errors.first_name_identifier
+                }
+              />
+            </Grid>
+            <Grid item xs={6}>
+              <TextField
+                name={last_name_identifier}
+                label='Last Name'
+                variant='outlined'
+                size='small'
+                fullWidth
+                value={formik.values.last_name_identifier}
+                onChange={formik.handleChange}
+                error={
+                  formik.touched.last_name_identifier &&
+                  Boolean(formik.errors.last_name_identifier)
+                }
+                helperText={
+                  formik.touched.last_name_identifier &&
+                  formik.errors.last_name_identifier
+                }
+              />
+            </Grid>
+            <Grid item xs={12}>
+              <TextField
+                name={relation_identifier}
+                label='Relation'
+                variant='outlined'
+                size='small'
+                fullWidth
+                value={formik.values.relation_identifier}
+                onChange={formik.handleChange}
+                error={
+                  formik.touched.relation_identifier &&
+                  Boolean(formik.errors.relation_identifier)
+                }
+                helperText={
+                  formik.touched.relation_identifier &&
+                  formik.errors.relation_identifier
+                }
+              />
+            </Grid>
+            <Grid item xs={12}>
+              <Divider light />
+            </Grid>
+          </>
+        )
+      })}
+      <Grid item xs={10}></Grid>
+      <Grid item xs={1}>
+        <IconButton
+          key='Add'
+          color='primary'
+          onClick={() => {
+            let number = numberOfBenefitiaries.length + 1
+            setNumberOfBenefitiaries([...numberOfBenefitiaries, number + 1])
+          }}
+        >
+          <AddIcon />
+        </IconButton>
       </Grid>
-      <Grid item xs={12}>
-        <TextField
-          name='relation2'
-          label='Relation'
-          variant='outlined'
-          size='small'
-          fullWidth
-          value={formik.values.relation2}
-          onChange={formik.handleChange}
-          error={formik.touched.relation2 && Boolean(formik.errors.relation2)}
-          helperText={formik.touched.relation2 && formik.errors.relation2}
-        />
+      <Grid item xs={1}>
+        <IconButton
+          key='Remove'
+          color='error'
+          onClick={() => {
+            let number = numberOfBenefitiaries.length + 1
+            if (number > 2) {
+              setNumberOfBenefitiaries(
+                numberOfBenefitiaries.splice(0, number - 2)
+              )
+            }
+          }}
+        >
+          <RemoveIcon />
+        </IconButton>
       </Grid>
-      <Grid item xs={6}>
-        <TextField
-          name='benefitiary_first_name3'
-          label='First Name'
-          variant='outlined'
-          size='small'
-          fullWidth
-          value={formik.values.benefitiary_first_name3}
-          onChange={formik.handleChange}
-          error={
-            formik.touched.benefitiary_first_name3 &&
-            Boolean(formik.errors.benefitiary_first_name3)
-          }
-          helperText={
-            formik.touched.benefitiary_first_name3 &&
-            formik.errors.benefitiary_first_name3
-          }
-        />
-      </Grid>
-      <Grid item xs={6}>
-        <TextField
-          name='benefitiary_last_name3'
-          label='Last Name'
-          variant='outlined'
-          size='small'
-          fullWidth
-          value={formik.values.benefitiary_last_name3}
-          onChange={formik.handleChange}
-          error={
-            formik.touched.benefitiary_last_name3 &&
-            Boolean(formik.errors.benefitiary_last_name3)
-          }
-          helperText={
-            formik.touched.benefitiary_last_name3 &&
-            formik.errors.benefitiary_last_name3
-          }
-        />
-      </Grid>
-      <Grid item xs={12}>
-        <TextField
-          name='relation3'
-          label='Relation'
-          variant='outlined'
-          size='small'
-          fullWidth
-          value={formik.values.relation3}
-          onChange={formik.handleChange}
-          error={formik.touched.relation3 && Boolean(formik.errors.relation3)}
-          helperText={formik.touched.relation3 && formik.errors.relation3}
-        />
-      </Grid>
-      {/* <Grid item xs={6}>
-        <TextField
-          name='first_name'
-          label='First Name'
-          variant='outlined'
-          fullWidth
-          value={formik.values.benefitiary_first_name4}
-          onChange={formik.handleChange}
-          error={
-            formik.touched.benefitiary_first_name4 &&
-            Boolean(formik.errors.benefitiary_first_name4)
-          }
-          helperText={
-            formik.touched.benefitiary_first_name4 &&
-            formik.errors.benefitiary_first_name4
-          }
-        />
-      </Grid>
-      <Grid item xs={6}>
-        <TextField
-          name='last_name'
-          label='Last Name'
-          variant='outlined'
-          fullWidth
-          value={formik.values.benefitiary_last_name4}
-          onChange={formik.handleChange}
-          error={
-            formik.touched.benefitiary_last_name4 &&
-            Boolean(formik.errors.benefitiary_last_name4)
-          }
-          helperText={
-            formik.touched.benefitiary_last_name4 &&
-            formik.errors.benefitiary_last_name4
-          }
-        />
-      </Grid>
-      <Grid item xs={12}>
-        <TextField
-          name='relation'
-          label='Relation'
-          variant='outlined'
-          fullWidth
-          value={formik.values.relation4}
-          onChange={formik.handleChange}
-          error={formik.touched.relation4 && Boolean(formik.errors.relation4)}
-          helperText={formik.touched.relation4 && formik.errors.relation4}
-        />
-      </Grid> */}
     </Grid>
   )
 }
