@@ -128,7 +128,7 @@ export default function Login() {
           label='Username'
           defaultValue=''
           margin='normal'
-          fullWidth='true'
+          fullWidth
           onChange={(e) => {
             setUsername(e.target.value)
           }}
@@ -140,7 +140,7 @@ export default function Login() {
           type='password'
           autoComplete='current-password'
           margin='normal'
-          fullWidth='true'
+          fullWidth
           onChange={(e) => {
             setPassword(e.target.value)
           }}
@@ -149,7 +149,7 @@ export default function Login() {
           sx={{ textTransform: 'none', fontSize: '18px', marginTop: '20px' }}
           variant='contained'
           size='large'
-          fullWidth='true'
+          fullWidth
           onClick={(e) => {
             login(e)
           }}

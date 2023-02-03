@@ -4,7 +4,7 @@ import Axios from 'axios'
 // const baseUrl = env.API_URL
 
 export const axios = Axios.create({
-  baseURL: 'http://localhost:5000',
+  baseURL: 'http://localhosts:5000',
   headers: { Auth: 'eminsurance AUTH', 'Content-type': 'application/json' },
   timeout: 5000,
 })
